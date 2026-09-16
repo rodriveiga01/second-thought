@@ -1,4 +1,4 @@
-"""Regression net for TimeCop. Stdlib only: `python3 -m unittest discover -s tests -t .`
+"""Regression net for Second Thought. Stdlib only: `python3 -m unittest discover -s tests -t .`
 Covers the bypass class from testing (must never regress to allow-0)."""
 
 import unittest

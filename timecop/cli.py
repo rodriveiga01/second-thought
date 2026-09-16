@@ -1,4 +1,4 @@
-"""TimeCop: looks at a terminal command BEFORE it runs and stops dangerous ones.
+"""Second Thought: looks at a terminal command BEFORE it runs and stops dangerous ones.
 
 Safe to try: test, demo and check NEVER run commands — they only print
 opinions, like reading a recipe instead of cooking the meal.
@@ -121,9 +121,9 @@ def _zshrc() -> str:
 
 def cmd_init(write: bool) -> int:
     key = jev.get_key()
-    print("TimeCop setup — 4 steps. Nothing changes until step 4, and step 4 saves a backup first.")
+    print("Second Thought setup — 4 steps. Nothing changes until step 4, and step 4 saves a backup first.")
     print(f'1. Shell connector: {_hook_line()}')
-    print("   (One line in your terminal's settings file loads TimeCop into each new terminal.)")
+    print("   (One line in your terminal's settings file loads Second Thought into each new terminal.)")
     print(f"2. Python: {sys.version.split()[0]} — good.")
     if key:
         print("3. AI key: found. Real-AI protection is available.")
@@ -132,7 +132,7 @@ def cmd_init(write: bool) -> int:
         print("   To add it later: console.typesafe.ai → sign in → Settings → Keys →")
         print("   create a key, then run: security add-generic-password -s timecop-jev -a \"$USER\" -w")
         print("   (A box will ask for the key — paste it there. It never touches your typed history.)")
-    print("4. Self-test: ./timecop-cli test")
+    print("4. Self-test: ./second-thought test")
     if write:
         line = _hook_line()
         cur = open(_zshrc(), encoding="utf-8").read() if os.path.exists(_zshrc()) else ""
@@ -152,16 +152,16 @@ def cmd_init(write: bool) -> int:
 
 def cmd_uninstall(a) -> int:
     if not os.path.exists(_zshrc()):
-        print("No terminal settings file found — TimeCop was never turned on, nothing to remove.")
+        print("No terminal settings file found — Second Thought was never turned on, nothing to remove.")
         return 0
     lines = open(_zshrc(), encoding="utf-8").read().splitlines()
     kept = [ln for ln in lines if HOOK_LINE_MARK not in ln]
     if len(kept) == len(lines):
-        print("You're already off — TimeCop was never connected to this terminal, so there's nothing to undo.")
+        print("You're already off — Second Thought was never connected to this terminal, so there's nothing to undo.")
         return 0
     if not a.yes:
         try:
-            ans = input("Remove the one TimeCop line from ~/.zshrc? [y/N] ").strip().lower()
+            ans = input("Remove the one Second Thought line from ~/.zshrc? [y/N] ").strip().lower()
         except EOFError:
             ans = ""
         if ans not in ("y", "yes"):
@@ -175,7 +175,7 @@ def cmd_uninstall(a) -> int:
 
 
 def cmd_doctor() -> int:
-    print("TimeCop self-test — SAFE: this only reads words and prints opinions. Nothing runs. Cost $0.")
+    print("Second Thought self-test — SAFE: this only reads words and prints opinions. Nothing runs. Cost $0.")
     t0 = time.time()
     r1 = check("ls -la")
     r2 = check("sudo rm -rf /")
@@ -195,7 +195,7 @@ def cmd_doctor() -> int:
         print("       NOTE means 'one optional thing missing', not 'you failed'.")
         print("       Add a key for real AI protection (README step 6).")
     print(f"Done in about {int((time.time() - t0) * 1000)}ms (ms = milliseconds, thousandths of a second).")
-    print("Verdict: " + ("TimeCop works. The only thing that changed: a few diary lines "
+    print("Verdict: " + ("Second Thought works. The only thing that changed: a few diary lines "
                           "(reel/receipt.jsonl). Nothing else on your computer was touched."
                           if (g1 and g2 and g3) else "something is wrong — ask for help."))
     return 0 if (g1 and g2 and g3) else 1
@@ -205,7 +205,7 @@ def cmd_check(a) -> int:
     text = (a.command or "").strip()
     if not text:
         print("You gave me an empty command — nothing to judge. "
-              "Try: ./timecop-cli check \"ls\"")
+              "Try: ./second-thought check \"ls\"")
         return 0
     if text.upper() == "YES":
         print("Note: the word YES by itself is harmless, so this says OK. "
@@ -236,7 +236,7 @@ def cmd_check(a) -> int:
 def cmd_reel(a) -> int:
     with open(a.file, encoding="utf-8") as f:
         cases = json.load(f)
-    print(f"TimeCop safety drill — {len(cases)} famous bad commands as TEXT ONLY (like reading about fires in a textbook). Nothing runs.")
+    print(f"Second Thought safety drill — {len(cases)} famous bad commands as TEXT ONLY (like reading about fires in a textbook). Nothing runs.")
     if a.live and not jev.get_key():
         print("Note: you asked for the real AI (--live) but no AI key was found, "
               "so this drill used the free built-in rules. Nothing was spent.", file=sys.stderr)
@@ -281,12 +281,12 @@ def cmd_clean() -> int:
 
 def cmd_diary(a) -> int:
     if not os.path.exists(RECEIPT_PATH):
-        print("Diary is empty — run the self-test first: ./timecop-cli test")
+        print("Diary is empty — run the self-test first: ./second-thought test")
         return 0
     with open(RECEIPT_PATH, encoding="utf-8") as f:
         lines = [ln for ln in f.read().splitlines() if ln.strip()]
     if not lines:
-        print("Diary is empty — run the self-test first: ./timecop-cli test")
+        print("Diary is empty — run the self-test first: ./second-thought test")
         return 0
     shown = lines[-a.n:]
     print(f"Diary — last {len(shown)} checks (plain words; full details stay in reel/receipt.jsonl):")
@@ -317,11 +317,11 @@ def cmd_diary(a) -> int:
 
 def main(argv=None) -> int:
     p = FriendlyParser(
-        prog="timecop",
+        prog="second-thought",
         description="Looks at a terminal command BEFORE it runs and stops dangerous ones. "
                     "Safe to try: test, demo and check never run commands — they only print opinions.",
         epilog="New here? Read README.md first, or double-click 'Start Here.command'. "
-               "First step: ./timecop-cli test")
+               "First step: ./second-thought test")
     sub = p.add_subparsers(dest="cmd", required=True, metavar="job",
                            help="the task word: test (self-test), demo (safety drill), "
                                 "check (judge one command), setup (turn protection on), "

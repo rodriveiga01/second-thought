@@ -1,10 +1,10 @@
-# TimeCop shell glue — loaded into your terminal by one line in ~/.zshrc.
-# Install: ./timecop-cli setup --write   (adds that line for you, with backup)
+# Second Thought shell glue — loaded into your terminal by one line in ~/.zshrc.
+# Install: ./second-thought setup --write   (adds that line for you, with backup)
 # Fail-open: any error -> command runs. Boring commands skip python (~1ms).
 
 # Repo root = parent of this file's directory; works from any folder.
 # (If the folder was moved or deleted, this stays empty and the terminal
-#  works exactly as before — TimeCop can never break your shell.)
+#  works exactly as before — Second Thought can never break your shell.)
 _timecop_src="${(%):-%N}"
 TIMECOP_DIR="${TIMECOP_DIR:-${_timecop_src:A:h:h}}"
 if [[ -d "$TIMECOP_DIR/timecop" ]]; then
@@ -20,7 +20,7 @@ setopt BRACKETED_PASTE 2>/dev/null || true
 # One-time key notice at shell start (not per-Enter). Skip when paused.
 if [[ "${TIMECOP_OFF:-}" != "1" && -z "${TYPESAFE_API_KEY:-}" ]]; then
   if ! security find-generic-password -s timecop-jev -w >/dev/null 2>&1; then
-    echo "timecop: no API key — running demo rules. Get one: console.typesafe.ai/settings/keys, then: export TYPESAFE_API_KEY=..."
+    echo "second-thought: no API key — running demo rules. Get one: console.typesafe.ai/settings/keys, then: export TYPESAFE_API_KEY=..."
   fi
 fi
 

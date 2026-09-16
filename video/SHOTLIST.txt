@@ -1,27 +1,27 @@
-TIMECOP VIDEO — SHOT LIST (about 3 minutes total)
+SECOND THOUGHT VIDEO — SHOT LIST (about 3 minutes total)
 ================================================
 Film from the folder root: right-click "test 1" → New Terminal at Folder,
-then every command starts with ./timecop-cli
+then every command starts with ./second-thought
 Record with Cmd+Shift+5. Nothing below can harm your files — check and
 demo only judge words, they never run anything.
 
 BEFORE YOU RECORD (2 min, off camera):
 1. Close everything except Terminal. Turn on Do Not Disturb.
 2. Terminal → Settings → Text → font size 18+ (viewers must read it).
-3. Fresh receipt for a clean money shot:  ./timecop-cli clean
+3. Fresh receipt for a clean money shot:  ./second-thought clean
 4. Rehearse each shot once without recording.
 
 SHOT 1 (20s) — "it works, and it's free"
-  ./timecop-cli test
+  ./second-thought test
   Viewers see: 3 PASS lines, "AI key: found", $0. Say: nothing ran.
 
 SHOT 2 (30s) — "the scary one, safely"
-  ./timecop-cli check --live "sudo rm -rf /"
+  ./second-thought check --live "sudo rm -rf /"
   Viewers see: STOP message from the real AI. Stress: NOTHING executed —
   check only gives an opinion. Mention the cost later (it's in the diary).
 
 SHOT 3 (60s) — "the full drill, every take identical" (the core of the video)
-  ./timecop-cli demo
+  ./second-thought demo
   Viewers see: 8 rounds, 5 stopped, 1 warning, 2 allowed, total $0.00.
   NOTE: no --live here on purpose. The live AI gets its solo in shot 2;
   the drill stays on built-in rules so every take matches. (Live AI is
@@ -29,16 +29,16 @@ SHOT 3 (60s) — "the full drill, every take identical" (the core of the video)
   which is correct behavior but bad television.)
 
 SHOT 4 (30s) — "the receipt" (the money shot)
-  ./timecop-cli diary -n 10
+  ./second-thought diary -n 10
   Viewers see: plain-words log. Point at the shot-2 line tagged "(real AI)"
   up top, then the drill lines below. Frontier-level judgments, fractions
   of a cent, proof on screen.
 
 SHOT 5 (20s, optional) — "mistakes are friendly"
-  ./timecop-cli chekc
+  ./second-thought chekc
   Viewers see: "Did you mean 'check'?" — good for beginners watching.
 
 OUTRO (10s): show the folder + README on screen. Done.
 
-IF ANYTHING LOOKS OFF: stop recording, run ./timecop-cli test again,
+IF ANYTHING LOOKS OFF: stop recording, run ./second-thought test again,
 and re-shoot just that shot. Never type --write on camera.

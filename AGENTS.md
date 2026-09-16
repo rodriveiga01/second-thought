@@ -1,6 +1,6 @@
 # AGENTS.md — working in this repo (humans and coding agents)
 
-TimeCop is a terminal seatbelt: a zsh accept-line hook judges each command
+Second Thought is a terminal seatbelt: a zsh accept-line hook judges each command
 before it runs — allow/warn/block (exits 0/1/2) via Jev (TypeSafe System One
 model) or a deterministic mock when keyless.
 
@@ -19,9 +19,9 @@ model) or a deterministic mock when keyless.
 ## Commands
 
 - `python -m unittest discover -s tests -t .` — full suite, milliseconds, $0.
-- `./timecop-cli test` (aka `doctor`) — self-test. `./timecop-cli demo`
+- `./second-thought test` (aka `doctor`) — self-test. `./second-thought demo`
   (aka `reel`) — drill. Both never execute anything.
-- `./timecop-cli check "..."` — judge one string. Never executes it either.
+- `./second-thought check "..."` — judge one string. Never executes it either.
 - Only `setup --write` / `remove` / `clean` mutate anything (shell rc / logs).
 
 ## Hard rules
@@ -60,3 +60,8 @@ hook: accept-line → python check --live → block clears BUFFER,
 
 Keyless mode knows 11 scenarios by heart and waves through the rest —
 rehearsal, not protection. That boundary is documented and intentional.
+
+Naming history: the public brand is Second Thought, but the Python import
+package (`timecop.*`), the `timecop` console-script alias, and the shell's
+`TIMECOP_*` variables keep the original codename — like Pillow's `import PIL`.
+Don't "fix" this; new user-facing surfaces use Second Thought.

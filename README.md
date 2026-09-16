@@ -1,4 +1,4 @@
-# TimeCop ⏱️
+# Second Thought ⏱️
 
 Terminal seatbelt: judges each shell command **before** it runs — **allow / warn / block** (exits 0/1/2) — via Jev, a TypeSafe System One model that returns calibrated decisions instead of text, so it can't inject commands back. Stdlib-only Python, zsh hook, fail-open everywhere.
 
@@ -8,10 +8,10 @@ First time in a terminal? Start with [`docs/BEGINNERS.md`](docs/BEGINNERS.md). C
 ## Quickstart
 
 ```sh
-pip install -e .          # or just use ./timecop-cli, no install needed
-timecop test              # self-test, $0, nothing runs
-timecop demo              # 11-scenario drill, $0, nothing runs
-timecop check "rm -rf /"  # judge one string, never executes it
+pip install -e .          # or just use ./second-thought, no install needed
+second-thought test       # self-test, $0, nothing runs
+second-thought demo       # 11-scenario drill, $0, nothing runs
+second-thought check "rm -rf /"  # judge one string, never executes it
 ```
 
 Protection mode (key recommended):
