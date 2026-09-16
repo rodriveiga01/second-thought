@@ -1,0 +1,15 @@
+Second Thought vs fooling attempts — 5 terminal reels, escalating.
+Every judgment pause and output byte is from a real live run; only the
+typing animation and the neutral `demo$ ` prompt are staged. No usernames.
+
+01-obvious    sudo rm -rf /                              → STOPPED (exit 2)
+02-disguised  rm${IFS}-rf${IFS}/                         → STOPPED (exit 2)
+03-smuggled   ls; rm -rf /                               → STOPPED (exit 2)
+04-encoded    base64 pipe into sudo bash                  → WARNING (exit 1)
+05-unknown    reverse shell (/dev/tcp, never seen before) → WARNING (exit 1)
+
+The arc is the point: 1–3 blocked cold, 4–5 flagged with honest uncertainty.
+
+Play:   pip install asciinema && asciinema play 01-obvious.cast
+Share:   asciinema upload <file>.cast  — or render GIF/video with `agg`
+         (https://github.com/asciinema/agg)
