@@ -42,8 +42,8 @@ model) or a deterministic mock when keyless.
    warn at P>0.6. Live draws vary run to run — recalibration needs dozens of
    labeled calls, never 2–3 anecdotes.
 6. **Keep outputs beginner-readable.** Short sentences, no unexplained jargon,
-   every error suggests the fix. README serves three readers (junior / senior /
-   agent-operator) in short sections; terminal-tutorial content goes in
+   every error suggests the fix. README is one flowing page (story → quickstart
+   → depth, no persona gates); terminal-tutorial content goes in
    `docs/BEGINNERS.md`.
 7. **Receipt logs are runtime state** (`reel/receipt*.jsonl`, gitignored).
    Never assert on them in tests; clear them with `clean`, not deletion debates.

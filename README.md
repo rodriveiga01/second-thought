@@ -1,77 +1,86 @@
 # Second Thought ⏱️
 
-Terminal seatbelt: judges each shell command **before** it runs — **allow / warn / block** (exits 0/1/2) — via Jev, a TypeSafe System One model that returns calibrated decisions instead of text, so it can't inject commands back. Stdlib-only Python, zsh hook, fail-open everywhere.
+[![test](https://github.com/rodriveiga01/second-thought/actions/workflows/test.yml/badge.svg)](https://github.com/rodriveiga01/second-thought/actions/workflows/test.yml)
 
-Keyless mode runs a deterministic 12-scenario mock: **rehearsal, not protection.**
+The most expensive keystroke on your keyboard is **Enter**.
 
-- **Junior dev?** → [Why you need this](#for-junior-engineers) (5 min)
-- **Senior?** → [Guarantees & rollout](#for-senior-engineers)
-- **Guarding AI agents?** → [Pre-tool-call gate](#for-agent-operators)
-- **New to terminals?** → [`docs/BEGINNERS.md`](docs/BEGINNERS.md) · **Coding agent?** → [`AGENTS.md`](AGENTS.md)
+Every engineer collects a story about it. `rm -rf` one folder too high. A database
+command meant for localhost landing on prod. `git push --force main` wiping a
+teammate's afternoon. A `curl | bash` installer nobody vetted. An AWS key pushed
+before anyone noticed. One command, a few seconds, permanent. Reviews, CI, and
+backups all help *around* that moment — nothing watches the moment itself.
 
-## Quickstart
+Second Thought sits in that moment. It's a terminal seatbelt: every shell command
+gets judged **before** it runs — **allow, warn, or block** — and then life goes on.
+Green means go. Yellow means stop and read. Red means it didn't run. It's not a
+self-driving car and it doesn't pretend to be one: a seatbelt, not a replacement
+for backups, least-privilege, or access controls.
+
+Under the hood, a calibrated AI judge (Jev, a TypeSafe System One model) answers
+multiple-choice questions about your command — *dangerous? which kind? how sure?* —
+instead of generating text, so it can't hallucinate commands back at you. Boring
+commands like `ls` never leave your laptop. Scary ones cost about a millionth of
+a dollar to judge. Anything the judge can't reach — offline, slow, no key — fails
+open to allow, and admits it in the log.
+
+New to terminals? Start with [`docs/BEGINNERS.md`](docs/BEGINNERS.md) instead —
+this page assumes you know your way around a shell.
+
+## Taste it in 60 seconds
 
 ```sh
-pip install -e .              # or just use ./second-thought, no install needed
-second-thought test           # self-test, $0, nothing runs
-second-thought demo           # 12-scenario drill, $0, nothing runs
-second-thought check "rm -rf /"  # judge one string, never executes it
+git clone https://github.com/rodriveiga01/second-thought.git && cd second-thought
+pip install -e .              # or skip install: ./second-thought works too
+second-thought demo           # the 12-scenario drill — $0, nothing runs
 ```
 
-Protection mode (key recommended) — install once, it follows you to every folder:
+You'll see the tool stop five disasters, flag three maybes, and wave through two
+everyday commands — all as text on screen, none of it executed. That drill is the
+whole product in miniature. If you like what you see:
 
 ```sh
-second-thought setup --write  # one line into ~/.zshrc (backup first), then open a new shell
-export SECOND_THOUGHT_OFF=1   # pause for this shell · second-thought remove # uninstall
+second-thought test           # self-test: gates, key status, latency
+second-thought setup --write  # protection on: one line into ~/.zshrc (backup first)
 ```
 
-API key (for the real judge): create one at `console.typesafe.ai → Settings → Keys`,
-then `security add-generic-password -s second-thought-jev -a "$USER" -w` (macOS Keychain —
-never a file). Scary commands cost ~$0.00002 each; boring ones are $0.
+Then open a new terminal. From now on, every folder you `cd` into is covered —
+the hook lives in your shell, not in any repo, with per-command repo/branch
+awareness from git. Pause anytime with `export SECOND_THOUGHT_OFF=1`.
 
-## For junior engineers
+For real judgment instead of rehearsal, add one API key (free):
+`console.typesafe.ai → Settings → Keys`, then store it in your Mac Keychain —
+never in a file:
 
-Every team has these stories: `rm -rf` one folder too high, a database command
-meant for localhost hitting prod, `git push --force main` wiping an afternoon,
-a pasted `curl | bash` nobody vetted, a leaked AWS key. One command, seconds,
-permanent. Reviews, CI, and backups help *around* the moment — nothing watches
-the moment your finger hits Enter. That's this tool: a seatbelt, not a
-replacement for backups, least-privilege, or access controls.
+```sh
+security add-generic-password -s second-thought-jev -a "$USER" -w
+```
 
-The hook lives in your shell, not in any repo, so one install covers every
-codebase folder you'll ever `cd` into — with per-command repo/branch awareness
-from git. Daily rules: green means go, **yellow means stop and read** (ask
-someone if you don't understand the warning), red means it didn't run. `YES`
-re-runs a block exactly once — it is not muscle memory; typing it blind builds
-a one-word self-destruct.
+Without a key you get a deterministic 12-scenario mock: great for demos,
+honest about its limits, and labeled as rehearsal everywhere it appears.
 
-## For senior engineers
+## A normal day with it on
 
-**Pipeline:** `normalize → redact → boring? (allow, $0) → build_state (~400 tokens:
-cmd+cwd+repo+branch+history) → judge: live Jev (noul+choice+score, one parallel
-call) or mock → confidence gate → block/warn/allow → JSONL receipt.`
+Most commands pass silently — everyday ones resolve in about a millisecond without
+touching the network. When something gets flagged, it looks like this:
 
-**Guarantees worth reviewing:** fail-open on every path (offline/slow/no-key
-degrades to allow and records `degraded: true`, never silent); secrets redacted
-*before* judging, logging, or sending, with the fact-of-redaction passed to the
-judge; gates at P>0.85 + conf>0.8 + risk≥1 for block, P>0.6 warn — tuned for
-precision, deliberately not fitted to samples; any shell operator forces full
-judgment (`ls; rm -rf /` can't hide); bare `YES` with nothing pending can never
-execute (on macOS bare `YES` resolves to `/usr/bin/yes` — guarded).
+```text
+$ git push --force origin main
+Warning — this looks risky. STOP — this overwrites work your whole team shares.
+```
 
-**Verification:** 19-test stdlib suite (`python -m unittest discover -s tests -t .`,
-CI on 3.11+3.14), 12-scenario drill, plus interactive PTY tests of the hook
-(block/override/guard/passthrough) run during development. Live draws vary run
-to run — treat near-gate disagreements as calibration working, not bugs.
+A warning still runs; it's a senior tapping your shoulder. A block doesn't run at
+all. If you're sure — really sure, folder/branch/database-name checked — type
+`YES` and it runs exactly once. Two rules that keep the seatbelt working: warnings
+are stop-signs, not speed bumps, and **YES is not muscle memory**. Typing it blind
+builds a one-word self-destruct.
 
-**Rollout:** per-dev install, key in each dev's Keychain, ~$0.003 covers a heavy
-demo day. Recommend pairing with the juniors' rules above and a shared
-understanding that warnings are stop-signs.
+Everything judged lands in a local diary (`second-thought diary`), plain words
+with timestamps — your audit trail for "what happened Friday."
 
-## For agent operators
+## Using it from scripts and AI agents
 
-`check` is a pre-tool-call gate primitive: it never executes, exits
-0/1/2, and appends a structured receipt. Gate your agent's shell tool on it:
+`check` never executes anything, exits 0/1/2, and appends a structured receipt —
+that's a pre-tool-call gate primitive. Gate an agent's shell tool on it:
 
 ```python
 import json, subprocess
@@ -89,12 +98,37 @@ else:
         run_tool(cmd)
 ```
 
-Budget math: ~70–900ms and ~$0.000001–0.00002 per check; 1,000 gated tool
-calls ≈ a few cents. Boring commands resolve locally for $0. The receipt log
-(`drill/receipt.jsonl`, `degraded`/`confidence`/`mode` fields) doubles as your
-audit trail — which decision, how sure, which judge.
+Budget math: ~70–900ms and ~$0.000001–0.00002 per check, so 1,000 gated tool
+calls cost a few cents; boring commands resolve locally for $0.
 
-## CLI
+## How it works
+
+```
+typed command → normalize → redact → boring? (allow, $0)
+  → build_state (~400 tokens: cmd+cwd+repo+branch+history)
+  → judge: live Jev (noul+choice+score, one parallel call) or mock
+  → confidence gate → block/warn/allow → JSONL receipt
+```
+
+Details worth knowing: secrets are redacted *before* judging, logging, or
+sending (and the judge is told a secret was hidden, so it doesn't hedge on the
+marker). Gates sit at P>0.85 + confidence>0.8 + risk≥1 for block, P>0.6 for
+warn — tuned for precision and deliberately never fitted to a handful of
+samples. Any shell operator (`; | & $ \` > <`, newlines) forces full judgment,
+so `ls; rm -rf /` can't hide behind `ls`. The hook wraps zsh's accept-line
+(preexec alone can't block): a block clears the input buffer, `YES` restores it
+once via an unguessable temp file. And yes — we learned the hard way that a
+bare `YES` with nothing pending must never execute, because on macOS it
+resolves to `/usr/bin/yes` and floods the terminal. It's guarded.
+
+Verified by a 19-test stdlib suite (`python -m unittest discover -s tests -t .`,
+also in CI on 3.11+3.14), the 12-scenario drill, and interactive shell tests of
+the hook covering block, override, guard, and passthrough. Live draws vary run
+to run — near-gate disagreements are calibration working, not bugs. Contributing
+agents should read [`AGENTS.md`](AGENTS.md) first (mock-first rule: never spend
+live API budget in automation).
+
+## CLI reference
 
 | Job | Does |
 |---|---|
@@ -104,27 +138,33 @@ audit trail — which decision, how sure, which judge.
 | `diary [-n]` / `clean` | Read / rotate the local receipt log |
 | `setup [--write]` / `remove` | Install / remove the shell hook (asks first) |
 
-Verdicts are traffic-light colored (red stop · yellow warn · green pass) on
-terminals; plain text when piped. `NO_COLOR=1` or `SECOND_THOUGHT_COLOR=never`
-forces plain, `=always` forces color.
+Verdicts are traffic-light colored on terminals, plain when piped.
+`NO_COLOR=1` or `SECOND_THOUGHT_COLOR=never` forces plain.
 
-## Tests
+## FAQ
 
-```sh
-python -m unittest discover -s tests -t .   # 19 tests, milliseconds, $0, no key needed
-```
+**Will it slow down my shell?** Everyday commands resolve locally in ~1ms.
+Scary ones take one judgment call (~70–900ms live). You'll feel nothing on
+`ls`; you'll feel a beat on `rm -rf` — that's the point.
+
+**Does it phone home?** Only live judgments leave the laptop, carrying the
+redacted command plus folder/repo/branch context. Keyless mode makes zero
+network calls. Ever.
+
+**What if it blocks something legitimate?** That's what `YES` is for — once,
+deliberately. If it happens often, the gates may be wrong for your workflow;
+open an issue with the receipt line.
+
+**bash/fish/Windows?** zsh on macOS today. The engine is plain Python and
+portable; the hook is the zsh-specific part.
+
+**What do you do with my data?** Nothing — there is no server side. Receipts
+live in `drill/receipt.jsonl` on your disk; `clean` rotates them.
 
 ## Layout
 
-`second_thought/` engine (`filter` → `jev` → `policy` → `receipt` → `cli`) ·
-`hooks/second-thought.zsh` shell glue · `tests/` suite · `drill/` scenarios ·
-`docs/` beginner guide + build spec · `video/` demo shot list.
-
-## Known limitations (honest)
-
-- Keyless mock knows 12 scenarios; everything else waves through by design.
-- Live draws vary run to run; gates are tuned for precision (block only when sure), so near-calls surface as warnings.
-- A seatbelt, not a replacement for backups, least-privilege, or prod access controls.
+`second_thought/` engine · `hooks/` shell glue · `tests/` suite ·
+`drill/` scenarios · `docs/` beginner guide + build spec.
 
 ## License
 
