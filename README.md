@@ -28,8 +28,10 @@ this page assumes you know your way around a shell.
 
 <video src="video/reels/all-five.mp4" width="100%" controls></video>
 
-*Five attacks in 26 seconds — three stopped cold, two flagged with honest
-uncertainty. Full series with sources in [`video/reels/`](video/reels/).*
+*Five attacks in 28 seconds, escalating on two axes — what's at stake, and how
+hard it is to spot: plain destruction, a trojan installer, a silent key leak,
+a lying "cleanup", and something never seen before. Full series with sources
+in [`video/reels/`](video/reels/).*
 
 ## Taste it in 60 seconds
 
