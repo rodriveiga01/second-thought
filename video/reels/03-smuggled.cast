@@ -1,4 +1,4 @@
-{"version": 2, "width": 90, "height": 12, "timestamp": 1789567335, "env": {"SHELL": "zsh", "TERM": "xterm-256color"}, "title": "Second Thought vs: Hiding behind an innocent command"}
+{"version": 2, "width": 90, "height": 12, "timestamp": 1789567719, "env": {"SHELL": "zsh", "TERM": "xterm-256color"}, "title": "Second Thought vs: Hiding behind an innocent command"}
 [0.5, "o", "demo$ "]
 [0.545, "o", "l"]
 [0.59, "o", "s"]
@@ -13,5 +13,5 @@
 [0.995, "o", " "]
 [1.04, "o", "/"]
 [1.34, "o", "\r\n"]
-[2.498, "o", "STOP \u2014 this deletes files permanently. There is no undo.\r\nIn a protected terminal: type YES + Enter to run it once. (\"check\" itself never runs anything. Blocked-on-purpose shows as exit 2, not a crash.)\r\n"]
-[3.698, "o", "demo$ "]
+[2.375, "o", "\u001b[31mSTOP \u2014 this deletes files permanently. There is no undo.\u001b[0m\r\nIn a protected terminal: type YES + Enter to run it once. (\"check\" itself never runs anything. Blocked-on-purpose shows as exit 2, not a crash.)\r\n"]
+[3.575, "o", "demo$ "]

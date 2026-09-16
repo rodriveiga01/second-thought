@@ -26,6 +26,11 @@ open to allow, and admits it in the log.
 New to terminals? Start with [`docs/BEGINNERS.md`](docs/BEGINNERS.md) instead —
 this page assumes you know your way around a shell.
 
+<video src="video/reels/01-obvious.mp4" width="100%" controls></video>
+
+*Five seconds, one blocked disaster. The full escalation — disguised, smuggled,
+encoded, and never-seen-before attacks — is in [`video/reels/`](video/reels/).*
+
 ## Taste it in 60 seconds
 
 ```sh

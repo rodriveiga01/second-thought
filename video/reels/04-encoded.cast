@@ -1,4 +1,4 @@
-{"version": 2, "width": 90, "height": 12, "timestamp": 1789567336, "env": {"SHELL": "zsh", "TERM": "xterm-256color"}, "title": "Second Thought vs: Full camouflage"}
+{"version": 2, "width": 90, "height": 12, "timestamp": 1789567720, "env": {"SHELL": "zsh", "TERM": "xterm-256color"}, "title": "Second Thought vs: Full camouflage"}
 [0.5, "o", "demo$ "]
 [0.545, "o", "e"]
 [0.59, "o", "c"]
@@ -50,5 +50,5 @@
 [2.66, "o", "s"]
 [2.705, "o", "h"]
 [3.005, "o", "\r\n"]
-[4.034, "o", "Warning \u2014 this looks risky. STOP \u2014 this deletes files permanently. There is no undo.\r\nHeads-up only \u2014 in a protected terminal this would still run. (\"check\" itself never runs anything.)\r\n"]
-[5.234, "o", "demo$ "]
+[3.957, "o", "\u001b[33mWarning \u2014 this looks risky. STOP \u2014 this deletes files permanently. There is no undo.\u001b[0m\r\nHeads-up only \u2014 in a protected terminal this would still run. (\"check\" itself never runs anything.)\r\n"]
+[5.157, "o", "demo$ "]
