@@ -77,29 +77,53 @@ builds a one-word self-destruct.
 Everything judged lands in a local diary (`second-thought diary`), plain words
 with timestamps — your audit trail for "what happened Friday."
 
-## Using it from scripts and AI agents
+## Using it with AI coding agents
 
-`check` never executes anything, exits 0/1/2, and appends a structured receipt —
-that's a pre-tool-call gate primitive. Gate an agent's shell tool on it:
+Your agent types faster than you read — and at machine speed, "oops" scales
+beautifully. It will happily `rm -rf` the wrong directory, force-push `main`,
+or pipe a hallucinated installer into `bash`, then move on feeling great about
+its velocity. Reviewing every tool call yourself defeats the purpose of having
+the agent. So don't review them. Gate them: every shell call passes through
+Second Thought first, at about a millionth of a dollar a pop — cheaper than
+glancing at a single diff.
+
+**Claude Code** — this repo ships a ready-made PreToolUse hook,
+`integrations/shell-gate.sh`. Save it somewhere stable and point at it:
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      { "matcher": "Bash",
+        "hooks": [{ "type": "command",
+                    "command": "/absolute/path/to/shell-gate.sh" }] }
+    ]
+  }
+}
+```
+
+A blocked command never reaches the shell (the hook exits 2 with the reason,
+override hint stripped); a warning lands in the transcript for the agent to
+read; garbage input, missing binary, dead network — all fail open with a note,
+because a broken gate must never wedge your agent at 3am. Same idea ports
+anywhere a shell call can be intercepted first: Codex, Cursor, OpenCode, or
+your own harness.
+
+**Any harness** — `check --json` prints the full receipt to stdout, so there's
+no log file to chase and no text to parse:
 
 ```python
 import json, subprocess
-p = subprocess.run(["second-thought", "check", "--live", cmd],
+p = subprocess.run(["second-thought", "check", "--live", "--json", cmd],
                    capture_output=True, text=True)
-if p.returncode == 2:
+rec = json.loads(p.stdout)          # action, confidence, degraded, cost_usd…
+if p.returncode == 2 or rec["action"] == "block":
     refuse("blocked", cmd)          # high-confidence destructive
-elif p.returncode == 1:
-    escalate_to_human(cmd)          # uncertain — a person decides
+elif p.returncode == 1 or rec.get("degraded"):
+    escalate_to_human(cmd)          # uncertain — or live failed; never fail open
 else:
-    rec = json.loads(open("drill/receipt.jsonl").readline().strip())
-    if rec.get("degraded"):         # live failed → mock judged
-        escalate_to_human(cmd)      # never fail open for agents
-    else:
-        run_tool(cmd)
+    run_tool(cmd)
 ```
-
-Budget math: ~70–900ms and ~$0.000001–0.00002 per check, so 1,000 gated tool
-calls cost a few cents; boring commands resolve locally for $0.
 
 ## How it works
 
@@ -134,7 +158,7 @@ live API budget in automation).
 |---|---|
 | `test` (`doctor`) | Self-test: gates, key status, latency. $0 |
 | `demo` (`reel`) | Runs `drill/disasters.json`, prints scored table |
-| `check "cmd"` | Judge one string. `--live` uses real Jev (needs key) |
+| `check "cmd"` | Judge one string. `--live` uses real Jev (needs key); `--json` prints the receipt as JSON |
 | `diary [-n]` / `clean` | Read / rotate the local receipt log |
 | `setup [--write]` / `remove` | Install / remove the shell hook (asks first) |
 
@@ -164,7 +188,7 @@ live in `drill/receipt.jsonl` on your disk; `clean` rotates them.
 ## Layout
 
 `second_thought/` engine · `hooks/` shell glue · `tests/` suite ·
-`drill/` scenarios · `docs/` beginner guide + build spec.
+`drill/` scenarios · `integrations/` agent hook · `docs/` beginner guide + build spec.
 
 ## License
 

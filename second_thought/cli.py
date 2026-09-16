@@ -254,6 +254,9 @@ def cmd_check(a) -> int:
     rec = check(a.command, live=a.live, cwd=a.cwd, repo=a.repo,
                 branch=a.branch, ssh_host=a.ssh_host)
     receipt.append(RECEIPT_PATH, rec)
+    if a.json:
+        print(json.dumps(rec))
+        return EXIT[rec["action"]]
     on = use_color()
     if rec["action"] == "allow":
         print(paint("OK — looks safe. ($0.00, instant.)", "green", on))
@@ -369,6 +372,8 @@ def main(argv=None) -> int:
     c.add_argument("--live", action="store_true",
                    help="use the real AI over the internet (needs AI key; fractions of a cent; "
                         "without a key it uses the free built-in rules instead)")
+    c.add_argument("--json", action="store_true",
+                   help="print the full receipt as JSON (for scripts and agent harnesses)")
     c.add_argument("--cwd", default="", help=argparse.SUPPRESS)
     c.add_argument("--repo", default="", help=argparse.SUPPRESS)
     c.add_argument("--branch", default="", help=argparse.SUPPRESS)
