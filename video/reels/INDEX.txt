@@ -10,9 +10,15 @@ typing animation and the neutral `demo$ ` prompt are staged. No usernames.
 
 The arc is the point: 1–3 blocked cold, 4–5 flagged with honest uncertainty.
 
+**all-five.mp4** — all five compiled into one ~26s video. This is the one
+embedded on the front page.
+
 Play:   pip install asciinema && asciinema play 01-obvious.cast
 Share:   asciinema upload <file>.cast  — or render GIF/video with `agg`
          (https://github.com/asciinema/agg)
+
+Style: modern terminal chrome (title bar, traffic dots, GitHub-dark palette),
+2x resolution. Rendered locally from the .cast files; no screen recorder.
 
 MP4 versions (same reels, 1316x440, 12fps, ready to post):
 01-obvious.mp4  02-disguised.mp4  03-smuggled.mp4

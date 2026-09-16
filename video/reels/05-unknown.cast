@@ -1,4 +1,4 @@
-{"version": 2, "width": 90, "height": 12, "timestamp": 1789567721, "env": {"SHELL": "zsh", "TERM": "xterm-256color"}, "title": "Second Thought vs: Never seen before"}
+{"version": 2, "width": 90, "height": 12, "timestamp": 1789570839, "env": {"SHELL": "zsh", "TERM": "xterm-256color"}, "title": "Second Thought vs: Never seen before"}
 [0.5, "o", "demo$ "]
 [0.545, "o", "b"]
 [0.59, "o", "a"]
@@ -39,5 +39,5 @@
 [2.165, "o", "&"]
 [2.21, "o", "1"]
 [2.51, "o", "\r\n"]
-[3.609, "o", "\u001b[33mWarning \u2014 this looks risky, but it doesn't match a known disaster pattern.\u001b[0m\r\nHeads-up only \u2014 in a protected terminal this would still run. (\"check\" itself never runs anything.)\r\n"]
-[4.809, "o", "demo$ "]
+[3.563, "o", "\u001b[33mWarning \u2014 this looks risky, but it doesn't match a known disaster pattern.\u001b[0m\r\nHeads-up only \u2014 a protected terminal would still run it.\r\n"]
+[4.763, "o", "demo$ "]

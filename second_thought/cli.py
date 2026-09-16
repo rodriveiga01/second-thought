@@ -262,12 +262,10 @@ def cmd_check(a) -> int:
         print(paint("OK — looks safe. ($0.00, instant.)", "green", on))
     elif rec["action"] == "warn":
         print(paint(rec["message"], "yellow", on))
-        print("Heads-up only — in a protected terminal this would still run. "
-              "(\"check\" itself never runs anything.)")
+        print("Heads-up only — a protected terminal would still run it.")
     else:
         print(paint(rec["message"], "red", on))
-        print("In a protected terminal: type YES + Enter to run it once. "
-              "(\"check\" itself never runs anything. Blocked-on-purpose shows as exit 2, not a crash.)")
+        print("In a protected terminal: type YES + Enter to run it once.")
     return EXIT[rec["action"]]
 
 

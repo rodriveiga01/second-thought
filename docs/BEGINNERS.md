@@ -65,7 +65,7 @@ Line by line:
 
 **Why the quotes?** Quotes put a multi-word command in one envelope. Without them, `check rm -rf /` scatters into pieces and you get `unrecognized arguments: -rf /` *plus* a hint line explaining the quotes. With quotes, `check "rm -rf /"` arrives whole. (Same glue idea as the folder-with-spaces above.)
 
-- `check "ls"` → `OK — looks safe. ($0.00, instant.)` Short, because there's nothing scary to explain. (Warn/block answers still spell out "never runs anything.")
+- `check "ls"` → `OK — looks safe. ($0.00, instant.)` Short, because there's nothing scary to explain. (Warn/block answers add one short follow-up line: what to do next.)
 - `check "sudo rm -rf /"` → `STOP — this deletes files permanently...` "Protected terminal" = a terminal with protection turned ON (Step 7) — yours isn't, so YES does nothing here, and `check "YES"` now *says that* instead of a confusing OK.
 - `check "rm -rf ./build"` → warning. Warnings still run in a protected terminal — their job is "slow down and look," not "stop." Stops are for the irreversible stuff.
 - **Traffic light** (`echo EXIT:$?` shows the last one): 0 green fine · 1 yellow warning, carried on · 2 red stopped on purpose. Red is 2 (not 1) because the connector needs three distinct signals. None mean "crashed."
