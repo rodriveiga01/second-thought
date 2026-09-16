@@ -45,10 +45,14 @@ can't hide behind `ls`. Offline/slow/no-key degrades to allow and says so
 | Job | Does |
 |---|---|
 | `test` (`doctor`) | Self-test: gates, key status, latency. $0 |
-| `demo` (`reel`) | Runs `reel/disasters.json`, prints scored table |
+| `demo` (`reel`) | Runs `drill/disasters.json`, prints scored table |
 | `check "cmd"` | Judge one string. `--live` uses real Jev (needs key) |
 | `diary [-n]` / `clean` | Read / rotate the local receipt log |
 | `setup [--write]` / `remove` | Install / remove the shell hook (asks first) |
+
+Verdicts are traffic-light colored (red stop · yellow warn · green pass) on
+terminals; plain text when piped. `NO_COLOR=1` or `SECOND_THOUGHT_COLOR=never`
+forces plain, `=always` forces color.
 
 ## Tests
 

@@ -1,13 +1,37 @@
 """Regression net for Second Thought. Stdlib only: `python3 -m unittest discover -s tests -t .`
 Covers the bypass class from testing (must never regress to allow-0)."""
 
+import os
 import unittest
 from unittest.mock import patch
 
-from second_thought.cli import check
+from second_thought.cli import check, paint, use_color
 from second_thought.filter import has_ops, is_boring, is_own_tool, normalize, redact
 from second_thought.policy import decide
 from second_thought import jev
+
+
+class Color(unittest.TestCase):
+    def test_paint_wraps_only_when_enabled(self):
+        self.assertEqual(paint("x", "red", True), "\033[31mx\033[0m")
+        self.assertEqual(paint("x", "red", False), "x")
+        self.assertEqual(paint("x", "nope", True), "x")
+
+    def test_force_and_kill_switch(self):
+        with patch.dict(os.environ, {"SECOND_THOUGHT_COLOR": "always"}):
+            self.assertTrue(use_color())
+        with patch.dict(os.environ, {"SECOND_THOUGHT_COLOR": "never"}):
+            self.assertFalse(use_color())
+
+    def test_no_color_honored(self):
+        with patch.dict(os.environ, {"NO_COLOR": "1", "SECOND_THOUGHT_COLOR": ""}):
+            self.assertFalse(use_color())
+
+    def test_dumb_terminal_plain(self):
+        env = {k: v for k, v in os.environ.items() if k != "NO_COLOR"}
+        env.update({"TERM": "dumb", "SECOND_THOUGHT_COLOR": ""})
+        with patch.dict(os.environ, env, clear=True):
+            self.assertFalse(use_color())
 
 
 class BoringList(unittest.TestCase):

@@ -21,6 +21,33 @@ EXIT = {"allow": 0, "warn": 1, "block": 2}
 # Traffic light: 0 = green (fine), 1 = yellow (warning, carried on),
 # 2 = red (stopped on purpose). The shell connector needs three different
 # numbers, which is why "blocked" is 2 and not 1. None of them mean "crashed".
+
+COLORS = {"red": "31", "yellow": "33", "green": "32"}
+
+
+def use_color():
+    """Verdict colors only. Auto-off when piped, dumb terminal, or NO_COLOR;
+    SECOND_THOUGHT_COLOR=always|never overrides. (Note: the shell hook shows
+    plain text regardless — zle -M strips ANSI codes.)"""
+    force = os.environ.get("SECOND_THOUGHT_COLOR", "").lower()
+    if force == "always":
+        return True
+    if force in ("never", "no", "0"):
+        return False
+    if os.environ.get("NO_COLOR"):
+        return False
+    if os.environ.get("TERM") == "dumb":
+        return False
+    try:
+        return sys.stdout.isatty()
+    except Exception:
+        return False
+
+
+def paint(text, color, enabled):
+    if not enabled or color not in COLORS:
+        return text
+    return f"\033[{COLORS[color]}m{text}\033[0m"
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RECEIPT_PATH = os.path.join(ROOT, "drill", "receipt.jsonl")
 ARCHIVE_PATH = os.path.join(ROOT, "drill", "receipt-archive.jsonl")
@@ -187,16 +214,18 @@ def cmd_doctor() -> int:
     r3 = check("git push --force origin main", cwd="/work/monorepo",
                repo="monorepo", branch="main")
     key = jev.get_key()
+    on = use_color()
     g1 = r1["action"] == "allow"
     g2 = r2["action"] == "block"
     g3 = r3["action"] == "block"
-    print(f"[{'PASS' if g1 else 'FAIL'}] Everyday command recognized (\"ls\" waves through)")
-    print(f"[{'PASS' if g2 else 'FAIL'}] Mass-delete stopped (\"sudo rm -rf /\" would be blocked — it was NOT run)")
-    print(f"[{'PASS' if g3 else 'FAIL'}] Shared-work overwrite stopped (\"git push --force main\" would be blocked — it was NOT run)")
+    ok, bad = paint("[PASS]", "green", on), paint("[FAIL]", "red", on)
+    print(f"{ok if g1 else bad} Everyday command recognized (\"ls\" waves through)")
+    print(f"{ok if g2 else bad} Mass-delete stopped (\"sudo rm -rf /\" would be blocked — it was NOT run)")
+    print(f"{ok if g3 else bad} Shared-work overwrite stopped (\"git push --force main\" would be blocked — it was NOT run)")
     if key:
-        print("[PASS] AI key: found. Real-AI protection is available.")
+        print(f"{ok} AI key: found. Real-AI protection is available.")
     else:
-        print("[NOTE] No AI key — the free built-in rules are active ($0).")
+        print(f"{paint('[NOTE]', 'yellow', on)} No AI key — the free built-in rules are active ($0).")
         print("       NOTE means 'one optional thing missing', not 'you failed'.")
         print("       Add a key for real AI protection (README step 6).")
     print(f"Done in about {int((time.time() - t0) * 1000)}ms (ms = milliseconds, thousandths of a second).")
@@ -225,14 +254,15 @@ def cmd_check(a) -> int:
     rec = check(a.command, live=a.live, cwd=a.cwd, repo=a.repo,
                 branch=a.branch, ssh_host=a.ssh_host)
     receipt.append(RECEIPT_PATH, rec)
+    on = use_color()
     if rec["action"] == "allow":
-        print("OK — looks safe. ($0.00, instant.)")
+        print(paint("OK — looks safe. ($0.00, instant.)", "green", on))
     elif rec["action"] == "warn":
-        print(rec["message"])
+        print(paint(rec["message"], "yellow", on))
         print("Heads-up only — in a protected terminal this would still run. "
               "(\"check\" itself never runs anything.)")
     else:
-        print(rec["message"])
+        print(paint(rec["message"], "red", on))
         print("In a protected terminal: type YES + Enter to run it once. "
               "(\"check\" itself never runs anything. Blocked-on-purpose shows as exit 2, not a crash.)")
     return EXIT[rec["action"]]
@@ -247,6 +277,7 @@ def cmd_reel(a) -> int:
               "so this drill used the free built-in rules. Nothing was spent.", file=sys.stderr)
     n_block = n_warn = n_allow = 0
     cost = 0.0
+    on = use_color()
     for case in cases:
         rec = check(case["cmd"], live=a.live, cwd=case.get("cwd", ""),
                     repo=case.get("repo", ""), branch=case.get("branch", ""),
@@ -259,10 +290,10 @@ def cmd_reel(a) -> int:
         label = case.get("label", case["id"])
         verb = {"block": "stopped", "warn": "warning shown", "allow": "allowed"}[rec["action"]]
         if rec["action"] == case.get("expect"):
-            print(f'[PASS] {label} → {verb} as expected '
+            print(f'{paint("[PASS]", "green", on)} {label} → {verb} as expected '
                   f'({"built-in rules" if rec["mode"] != "live" else "real AI"})')
         else:
-            print(f'[FAIL] {label} → {verb} (wanted: {case.get("expect")}). Worth a look.')
+            print(f'{paint("[FAIL]", "red", on)} {label} → {verb} (wanted: {case.get("expect")}). Worth a look.')
     mode = "real AI" if a.live and jev.get_key() else "built-in rules"
     print(f"Result: {n_block} stopped, {n_warn} warning shown, {n_allow} allowed. "
           f"Cost ${cost:.2f} ({mode}).")
@@ -303,12 +334,13 @@ def cmd_diary(a) -> int:
         when = r.get("at", "—")
         cmd = (r.get("cmd") or "")[:70]
         action = r.get("action", "?")
+        on = use_color()
         if action == "block":
-            what = "STOPPED"
+            what = paint("STOPPED", "red", on)
         elif action == "warn":
-            what = "warning shown"
+            what = paint("warning shown", "yellow", on)
         else:
-            what = "allowed"
+            what = paint("allowed", "green", on)
         judge = r.get("judge", {}) or {}
         sure = ""
         if isinstance(judge, dict) and "danger_p" in judge:

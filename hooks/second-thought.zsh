@@ -62,6 +62,8 @@ _second_thought_run_check() {
     repo=$(basename "${top%$'\n'*}")
   fi
   local out
+  # Plain output here on purpose: zle -M strips ANSI codes, so colors
+  # set for terminals never survive to the popup. The words do the work.
   out=$(python3 -m second_thought.cli check --live --cwd "$PWD" --repo "$repo" --branch "$branch" "$buf" 2>/dev/null)
   local code=$?
   if [[ $code -eq 2 ]]; then
