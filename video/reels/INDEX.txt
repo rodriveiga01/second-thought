@@ -13,3 +13,7 @@ The arc is the point: 1–3 blocked cold, 4–5 flagged with honest uncertainty.
 Play:   pip install asciinema && asciinema play 01-obvious.cast
 Share:   asciinema upload <file>.cast  — or render GIF/video with `agg`
          (https://github.com/asciinema/agg)
+
+MP4 versions (same reels, 1316x440, 12fps, ready to post):
+01-obvious.mp4  02-disguised.mp4  03-smuggled.mp4
+04-encoded.mp4   05-unknown.mp4
