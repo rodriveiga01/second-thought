@@ -1,0 +1,18 @@
+#!/usr/bin/env python3
+"""TimeCop launcher — works from ANY folder (fixes 'No module named timecop').
+
+Use it instead of `python3 -m timecop.cli ...`:
+  1. Drag this file into a terminal window (macOS types the location for you).
+  2. Add a space and a job, e.g.:  doctor   demo   setup
+  3. Press Enter.
+"""
+import os
+import sys
+
+ROOT = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, ROOT)
+
+from timecop.cli import main
+
+if __name__ == "__main__":
+    sys.exit(main())

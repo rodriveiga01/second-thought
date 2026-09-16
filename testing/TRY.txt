@@ -1,0 +1,10 @@
+Try these (safe: check only judges words, never runs anything):
+
+  ../timecop-cli test
+  ../timecop-cli demo
+  ../timecop-cli check "git push --force origin main"
+  ../timecop-cli diary -n 5
+
+Live AI is already set up (key in your Mac Keychain).
+Add --live to any check to use the real AI, e.g.:
+  ../timecop-cli check --live "sudo rm -rf /"

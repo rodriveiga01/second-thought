@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+
+# macOS
+.DS_Store
+
+# TimeCop runtime logs (append-only diary; regenerates on use)
+reel/receipt.jsonl
+reel/receipt-archive.jsonl
+
+# Foreign project cache sharing this folder — not ours, never commit
+.next/
