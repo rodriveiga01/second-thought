@@ -26,12 +26,12 @@ open to allow, and admits it in the log.
 New to terminals? Start with [`docs/BEGINNERS.md`](docs/BEGINNERS.md) instead —
 this page assumes you know your way around a shell.
 
-<video src="video/reels/all-five.mp4" width="100%" controls></video>
+[![Second Thought stopping five attacks](video/reels/all-five.gif)](video/reels/all-five.mp4)
 
 *Five attacks in 28 seconds, escalating on two axes — what's at stake, and how
 hard it is to spot: plain destruction, a trojan installer, a silent key leak,
-a lying "cleanup", and something never seen before. Full series with sources
-in [`video/reels/`](video/reels/).*
+a lying "cleanup", and something never seen before. Loops above; click through
+for the full-quality video. Full series with sources in [`video/reels/`](video/reels/).*
 
 ## Taste it in 60 seconds
 
