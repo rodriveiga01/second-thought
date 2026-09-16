@@ -140,5 +140,35 @@ class OwnToolSkip(unittest.TestCase):
         self.assertEqual(check("rm -rf / # second-thought")["action"], "block")
 
 
+class HookMode(unittest.TestCase):
+    def _run(self, *argv):
+        import io
+        from contextlib import redirect_stdout
+        from second_thought.cli import main
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            code = main(list(argv))
+        return code, buf.getvalue()
+
+    def test_hook_block_is_verdict_only(self):
+        code, out = self._run("check", "--hook", "sudo rm -rf /")
+        self.assertEqual(code, 2)
+        self.assertIn("STOP", out)
+        self.assertNotIn("YES", out)
+        self.assertNotIn("never runs", out)
+
+    def test_hook_warn_is_verdict_only(self):
+        code, out = self._run("check", "--hook", "rm -rf ./build",
+                              "--cwd", "/work/app", "--repo", "app",
+                              "--branch", "feat")
+        self.assertEqual(code, 1)
+        self.assertNotIn("Heads-up", out)
+
+    def test_human_mode_keeps_followups(self):
+        code, out = self._run("check", "sudo rm -rf /")
+        self.assertEqual(code, 2)
+        self.assertIn("YES", out)
+
+
 if __name__ == "__main__":
     unittest.main()

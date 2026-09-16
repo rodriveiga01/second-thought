@@ -64,7 +64,7 @@ _second_thought_run_check() {
   local out
   # Plain output here on purpose: zle -M strips ANSI codes, so colors
   # set for terminals never survive to the popup. The words do the work.
-  out=$(python3 -m second_thought.cli check --live --cwd "$PWD" --repo "$repo" --branch "$branch" "$buf" 2>/dev/null)
+  out=$(python3 -m second_thought.cli check --hook --live --cwd "$PWD" --repo "$repo" --branch "$branch" "$buf" 2>/dev/null)
   local code=$?
   if [[ $code -eq 2 ]]; then
     # Unpredictable per-block file: no fixed path to race or trick.

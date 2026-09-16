@@ -258,6 +258,15 @@ def cmd_check(a) -> int:
         print(json.dumps(rec))
         return EXIT[rec["action"]]
     on = use_color()
+    if a.hook:
+        # Called by the shell hook: verdict only. A protected terminal gets
+        # a clean red/yellow line every time; tutorials live in the docs.
+        if rec["message"]:
+            print(paint(rec["message"],
+                        "red" if rec["action"] == "block" else "yellow", on))
+        else:
+            print(paint("OK", "green", on))
+        return EXIT[rec["action"]]
     if rec["action"] == "allow":
         print(paint("OK — looks safe. ($0.00, instant.)", "green", on))
     elif rec["action"] == "warn":
@@ -372,6 +381,8 @@ def main(argv=None) -> int:
                         "without a key it uses the free built-in rules instead)")
     c.add_argument("--json", action="store_true",
                    help="print the full receipt as JSON (for scripts and agent harnesses)")
+    c.add_argument("--hook", action="store_true",
+                   help="terse output for shell-hook use: verdict only, no follow-ups")
     c.add_argument("--cwd", default="", help=argparse.SUPPRESS)
     c.add_argument("--repo", default="", help=argparse.SUPPRESS)
     c.add_argument("--branch", default="", help=argparse.SUPPRESS)
