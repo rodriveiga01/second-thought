@@ -1,4 +1,4 @@
-# TimeCop — 1-Page Build Spec (2026-09-16)
+# Second Thought — 1-Page Build Spec (2026-09-16)
 
 ## Summary
 - **What:** Tiny terminal seatbelt. Watches clipboard + shell, blocks ruin in ~200ms. 5 demo saves, one engine.
@@ -43,4 +43,4 @@ Terminal.app black / font 18 / DND on. `Cmd+Shift+5` record. Beats: $0.00 → ev
 - Seatbelt framing: honest about misses, builds trust.
 
 ## Next
-No packaging yet — run from repo root: `python3 -m timecop.cli doctor`, then `init --write`. `disaster-reel` eval (8 cases, $0 dry-run) doubles as install test. Dashboard reuse of existing `.next/` optional later.
+No packaging yet — run from repo root: `python3 -m second_thought.cli doctor`, then `init --write`. `disaster-reel` eval (8 cases, $0 dry-run) doubles as install test. Dashboard reuse of existing `.next/` optional later.

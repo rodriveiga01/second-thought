@@ -4,10 +4,10 @@ Covers the bypass class from testing (must never regress to allow-0)."""
 import unittest
 from unittest.mock import patch
 
-from timecop.cli import check
-from timecop.filter import has_ops, is_boring, normalize, redact
-from timecop.policy import decide
-from timecop import jev
+from second_thought.cli import check
+from second_thought.filter import has_ops, is_boring, is_own_tool, normalize, redact
+from second_thought.policy import decide
+from second_thought import jev
 
 
 class BoringList(unittest.TestCase):
@@ -91,7 +91,7 @@ class MockPrecedence(unittest.TestCase):
 
 class DegradedFlag(unittest.TestCase):
     def test_live_without_key_is_labeled(self):
-        with patch("timecop.jev.get_key", return_value=None):
+        with patch("second_thought.jev.get_key", return_value=None):
             rec = check("sudo rm -rf /", live=True)
         self.assertTrue(rec["degraded"])
         self.assertEqual(rec["mode"], "dry-run")
@@ -100,6 +100,20 @@ class DegradedFlag(unittest.TestCase):
     def test_normal_paths_not_degraded(self):
         self.assertFalse(check("ls -la")["degraded"])
         self.assertFalse(check("sudo rm -rf /")["degraded"])
+
+
+class OwnToolSkip(unittest.TestCase):
+    def test_own_invocations_skip_judgment(self):
+        for c in ["second-thought test", "./second-thought demo",
+                  'python3 -m second_thought.cli check "x"']:
+            self.assertTrue(is_own_tool(c), c)
+            rec = check(c)
+            self.assertEqual(rec["action"], "allow")
+            self.assertEqual(rec["reason"], "own-tool")
+
+    def test_suffix_trick_still_judged(self):
+        self.assertFalse(is_own_tool("rm -rf / # second-thought"))
+        self.assertEqual(check("rm -rf / # second-thought")["action"], "block")
 
 
 if __name__ == "__main__":

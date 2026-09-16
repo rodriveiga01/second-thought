@@ -22,9 +22,9 @@ EXIT = {"allow": 0, "warn": 1, "block": 2}
 # 2 = red (stopped on purpose). The shell connector needs three different
 # numbers, which is why "blocked" is 2 and not 1. None of them mean "crashed".
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RECEIPT_PATH = os.path.join(ROOT, "reel", "receipt.jsonl")
-ARCHIVE_PATH = os.path.join(ROOT, "reel", "receipt-archive.jsonl")
-HOOK_LINE_MARK = "hooks/timecop.zsh"
+RECEIPT_PATH = os.path.join(ROOT, "drill", "receipt.jsonl")
+ARCHIVE_PATH = os.path.join(ROOT, "drill", "receipt-archive.jsonl")
+HOOK_LINE_MARK = "hooks/second-thought.zsh"
 
 # Friendly nicknames (same jobs, easier words). All still work.
 ALIASES = {"test": "doctor", "demo": "reel", "setup": "init",
@@ -72,6 +72,11 @@ def check(cmd: str, live: bool = False, cwd="", repo="", branch="",
     stamp = time.strftime("%Y-%m-%d %H:%M")
     norm = F.normalize(cmd)
     redacted = F.redact(norm)
+    if F.is_own_tool(norm):
+        return {"action": "allow", "reason": "own-tool", "cost_usd": 0.0,
+                "ms": int((time.time() - t0) * 1000), "cmd": redacted[:200],
+                "mode": "local", "message": "", "key": "n/a", "at": stamp,
+                "degraded": False}
     if F.is_boring(norm):
         return {"action": "allow", "reason": "allowlist", "cost_usd": 0.0,
                 "ms": int((time.time() - t0) * 1000), "cmd": redacted[:200],
@@ -112,7 +117,7 @@ def check(cmd: str, live: bool = False, cwd="", repo="", branch="",
 
 
 def _hook_line() -> str:
-    return f'source "{ROOT}/hooks/timecop.zsh"  # timecop'
+    return f'source "{ROOT}/hooks/second-thought.zsh"  # second-thought'
 
 
 def _zshrc() -> str:
@@ -130,7 +135,7 @@ def cmd_init(write: bool) -> int:
     else:
         print("3. AI key: not added yet — that's fine, the free built-in rules ($0) work without it.")
         print("   To add it later: console.typesafe.ai → sign in → Settings → Keys →")
-        print("   create a key, then run: security add-generic-password -s timecop-jev -a \"$USER\" -w")
+        print("   create a key, then run: security add-generic-password -s second-thought-jev -a \"$USER\" -w")
         print("   (A box will ask for the key — paste it there. It never touches your typed history.)")
     print("4. Self-test: ./second-thought test")
     if write:
@@ -144,7 +149,7 @@ def cmd_init(write: bool) -> int:
             with open(_zshrc(), "a", encoding="utf-8") as f:
                 f.write(f"\n{line}\n")
             print(f"Done: added one line to the settings file (backup saved at {bak} — you'll see it in your home folder).")
-            print("Restart the terminal. Pause anytime with: export TIMECOP_OFF=1")
+            print("Restart the terminal. Pause anytime with: export SECOND_THOUGHT_OFF=1")
     else:
         print("Tip: re-run with --write and I'll add the line from step 1 for you (with backup).")
     return 0
@@ -196,7 +201,7 @@ def cmd_doctor() -> int:
         print("       Add a key for real AI protection (README step 6).")
     print(f"Done in about {int((time.time() - t0) * 1000)}ms (ms = milliseconds, thousandths of a second).")
     print("Verdict: " + ("Second Thought works. The only thing that changed: a few diary lines "
-                          "(reel/receipt.jsonl). Nothing else on your computer was touched."
+                          "(drill/receipt.jsonl). Nothing else on your computer was touched."
                           if (g1 and g2 and g3) else "something is wrong — ask for help."))
     return 0 if (g1 and g2 and g3) else 1
 
@@ -289,7 +294,7 @@ def cmd_diary(a) -> int:
         print("Diary is empty — run the self-test first: ./second-thought test")
         return 0
     shown = lines[-a.n:]
-    print(f"Diary — last {len(shown)} checks (plain words; full details stay in reel/receipt.jsonl):")
+    print(f"Diary — last {len(shown)} checks (plain words; full details stay in drill/receipt.jsonl):")
     for ln in shown:
         try:
             r = json.loads(ln)
@@ -340,7 +345,7 @@ def main(argv=None) -> int:
                        help="run the safety drill: famous bad commands as text only (nothing runs)")
     r.add_argument("--live", action="store_true",
                    help="judge with the real AI (needs AI key; costs under a cent total)")
-    r.add_argument("--file", default=os.path.join(ROOT, "reel", "disasters.json"),
+    r.add_argument("--file", default=os.path.join(ROOT, "drill", "disasters.json"),
                    help=argparse.SUPPRESS)
     i = sub.add_parser("init", aliases=["setup"], help="setup: shows 4 steps, or does step 1 for you with --write")
     i.add_argument("--write", action="store_true",

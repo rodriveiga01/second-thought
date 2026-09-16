@@ -18,11 +18,11 @@ Protection mode (key recommended):
 
 ```sh
 timecop setup --write     # one line into ~/.zshrc (backup first), then open a new shell
-export TIMECOP_OFF=1      # pause for this shell · timecop remove # uninstall
+export SECOND_THOUGHT_OFF=1      # pause for this shell · timecop remove # uninstall
 ```
 
 API key (for the real judge): create one at `console.typesafe.ai → Settings → Keys`,
-then `security add-generic-password -s timecop-jev -a "$USER" -w` (macOS Keychain —
+then `security add-generic-password -s second-thought-jev -a "$USER" -w` (macOS Keychain —
 never a file). Scary commands cost ~$0.00002 each; boring ones are $0.
 
 ## How it works
@@ -58,8 +58,8 @@ python -m unittest discover -s tests -t .   # 13 tests, milliseconds, $0, no key
 
 ## Layout
 
-`timecop/` engine (`filter` → `jev` → `policy` → `receipt` → `cli`) ·
-`hooks/timecop.zsh` shell glue · `tests/` suite · `reel/` drill ·
+`second_thought/` engine (`filter` → `jev` → `policy` → `receipt` → `cli`) ·
+`hooks/second-thought.zsh` shell glue · `tests/` suite · `reel/` drill ·
 `docs/` beginner guide + build spec · `video/` demo shot list.
 
 ## Known limitations (honest)

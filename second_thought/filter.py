@@ -10,6 +10,18 @@ ZERO_WIDTH = re.compile(r"[\u200b-\u200d\ufeff]")
 SAFE_WORDS = ("ls", "cd", "pwd", "echo", "cat", "whoami", "date")
 SAFE_PHRASES = ("git status", "git diff --stat", "git log")
 
+# Judging our own invocations is meaningless — and the inner quoted evil
+# would false-positive (`second-thought check "rm -rf /"` contains rm -rf).
+# PREFIX ONLY: `rm -rf / # second-thought` must still be judged.
+# Mirrored by the shell fast-path in hooks/second-thought.zsh.
+OWN_PREFIXES = ("./second-thought", "second-thought",
+                "python3 -m second_thought.cli", "python -m second_thought.cli")
+
+
+def is_own_tool(cmd: str) -> bool:
+    s = (cmd or "").strip().lower()
+    return any(s == p or s.startswith(p + " ") for p in OWN_PREFIXES)
+
 SECRET_PATTERNS = [
     (re.compile(r"AKIA[0-9A-Z]{16}"), "[REDACTED-AWS-KEY]"),
     (re.compile(r"gh[pousr]_[A-Za-z0-9_]{10,}"), "[REDACTED-GITHUB-TOKEN]"),

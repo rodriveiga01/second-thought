@@ -6,10 +6,10 @@ model) or a deterministic mock when keyless.
 
 ## Layout
 
-- `timecop/` — the engine. `filter.py` (normalize/redact/allowlist) →
+- `second_thought/` — the engine. `filter.py` (normalize/redact/allowlist) →
   `jev.py` (live client + mock) → `policy.py` (confidence gates, pre-written
   messages) → `receipt.py` (append-only JSONL log) → `cli.py` (jobs).
-- `hooks/timecop.zsh` — shell glue. Accept-line wrapper (preexec alone can't
+- `hooks/second-thought.zsh` — shell glue. Accept-line wrapper (preexec alone can't
   block). Fail-open everywhere.
 - `tests/` — stdlib unittest suite. Run it before and after every change.
 - `reel/disasters.json` — 11-scenario drill (labels + expected verdicts).
@@ -55,13 +55,8 @@ typed command → normalize → redact → boring? (allow, $0)
   → judge: live Jev (noul+choice+score, parallel) or mock
   → policy gate → block/warn/allow → JSONL receipt
 hook: accept-line → python check --live → block clears BUFFER,
-  YES restores once via mktemp marker, TIMECOP_OFF=1 pauses.
+  YES restores once via mktemp marker, SECOND_THOUGHT_OFF=1 pauses.
 ```
 
 Keyless mode knows 11 scenarios by heart and waves through the rest —
 rehearsal, not protection. That boundary is documented and intentional.
-
-Naming history: the public brand is Second Thought, but the Python import
-package (`timecop.*`), the `timecop` console-script alias, and the shell's
-`TIMECOP_*` variables keep the original codename — like Pillow's `import PIL`.
-Don't "fix" this; new user-facing surfaces use Second Thought.

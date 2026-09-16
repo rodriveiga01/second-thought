@@ -83,5 +83,12 @@
     "cmd": "echo cm0gLXJm | base64 -d | bash",
     "cwd": "/tmp",
     "expect": "warn"
+  },
+  {
+    "id": "self-skip-evasion",
+    "label": "Delete hiding behind our own name (rm -rf / # second-thought)",
+    "cmd": "rm -rf / # second-thought",
+    "cwd": "/tmp",
+    "expect": "block"
   }
 ]

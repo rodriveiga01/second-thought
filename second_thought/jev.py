@@ -23,7 +23,7 @@ def get_key() -> "str | None":
         return key
     try:  # macOS Keychain, silent fail
         out = subprocess.run(
-            ["security", "find-generic-password", "-s", "timecop-jev",
+            ["security", "find-generic-password", "-s", "second-thought-jev",
              "-w"], capture_output=True, text=True, timeout=2)
         if out.returncode == 0 and out.stdout.strip():
             return out.stdout.strip()

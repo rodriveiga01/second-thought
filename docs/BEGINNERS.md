@@ -20,7 +20,7 @@ Task words (every command starts with `./second-thought` + one of these): `test`
 | `Start Here.command` | Double-click starter (runs the check-up). |
 | `second-thought` | The remote control. Don't double-click it (it opens as text — that's normal, you didn't break it: it has no `.app`/`.exe` ending because it's a helper *for* the terminal, not a desktop app). Drag it into a terminal instead. Opened any file by accident? Nothing happens — reading files never runs them. |
 | `README.md` | The short programmer manual. This file is the long beginner one. |
-| `timecop/` | The engine (5 small program files). Code-looking is normal; you never need to open these. |
+| `second_thought/` | The engine (5 small program files). Code-looking is normal; you never need to open these. |
 | `hooks/` | One glue file connecting the engine to your terminal. Weird symbols like `zle -M` are the shell's language, not homework. |
 | `reel/` | The safety drill (11 labeled scenarios as text) + the diary file. |
 | `docs/` | This guide + design notes. |
@@ -97,11 +97,11 @@ Without it: built-in rules, $0, forever — but understand what those are: 11 ch
 
 **Money, plainly:** the AI bills per million text-chunks (a "chunk" ≈ 4 letters; "MTok" = million chunks). You pay $0.042/million for what you *send*; the answers come back free. One scary check ≈ a few hundred chunks ≈ **$0.00002**. Boring commands never call the AI ($0). A whole demo evening ≈ $0.003. "My $5 project budget" = *my* testing allowance while building this, not your bill — and since there's no account, no card, and no payment anywhere in this tool, charging you is *impossible*. (The *optional key* below needs their free account — the one exception to "no account." Even it has no payment.)
 
-**Adding it:** `console.typesafe.ai` → sign in (yes, this step needs an account — everything else doesn't) → Settings → Keys → create → copy. Then type exactly `security add-generic-password -s timecop-jev -a "$USER" -w` — `$USER` literally (computer fills in your name); `security` = macOS's password-manager tool. Press Enter: the blank line **is** the input box (password boxes show no dots — that's normal, not a frozen keyboard). Paste (Cmd+V), Enter, done. Verify it worked: run `./second-thought test` — the key line flips to `[PASS] AI key: found.` "History" = the terminal remembers typed lines (press ↑); pasting into that prompt skips the memory — the whole reason for the dance.
+**Adding it:** `console.typesafe.ai` → sign in (yes, this step needs an account — everything else doesn't) → Settings → Keys → create → copy. Then type exactly `security add-generic-password -s second-thought-jev -a "$USER" -w` — `$USER` literally (computer fills in your name); `security` = macOS's password-manager tool. Press Enter: the blank line **is** the input box (password boxes show no dots — that's normal, not a frozen keyboard). Paste (Cmd+V), Enter, done. Verify it worked: run `./second-thought test` — the key line flips to `[PASS] AI key: found.` "History" = the terminal remembers typed lines (press ↑); pasting into that prompt skips the memory — the whole reason for the dance.
 
 ## 7. Protection ON/OFF (only when ready)
 
-Your terminal reads a settings file on every launch: `~/.zshrc` (`~` = your home folder). A "shell hook" = one line in that file loading Second Thought into new terminals. `source "…"` = "load this file now". `export TIMECOP_OFF=1` = stick a note named TIMECOP_OFF saying 1 (= paused); `unset TIMECOP_OFF` peels it off.
+Your terminal reads a settings file on every launch: `~/.zshrc` (`~` = your home folder). A "shell hook" = one line in that file loading Second Thought into new terminals. `source "…"` = "load this file now". `export SECOND_THOUGHT_OFF=1` = stick a note named SECOND_THOUGHT_OFF saying 1 (= paused); `unset SECOND_THOUGHT_OFF` peels it off.
 
 ```sh
 ./second-thought setup --write
@@ -115,7 +115,7 @@ Two rules for protected life, especially juniors: a **warning** means stop and r
 
 **Fail-open, concretely:** every error path ends in "let the command run." Delete this whole folder and terminals still open fine (Second Thought just silently skips). It cannot lock you out — there's no code path that blocks without the AI voting first, and no-AI means allow.
 
-**Pause** (this window): `export TIMECOP_OFF=1`. Un-pause: `unset TIMECOP_OFF` or new window. **Uninstall:** `./second-thought remove` (backup kept). "Never turned on, nothing to undo" = precisely true: no line was ever added.
+**Pause** (this window): `export SECOND_THOUGHT_OFF=1`. Un-pause: `unset SECOND_THOUGHT_OFF` or new window. **Uninstall:** `./second-thought remove` (backup kept). "Never turned on, nothing to undo" = precisely true: no line was ever added.
 
 ## 8. Leftover words, one line each
 

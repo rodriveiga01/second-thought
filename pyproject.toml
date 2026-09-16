@@ -11,9 +11,8 @@ requires-python = ">=3.10"
 dependencies = []
 
 [project.scripts]
-second-thought = "timecop.cli:main"
-timecop = "timecop.cli:main"
+second-thought = "second_thought.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["timecop*"]
+include = ["second_thought*"]

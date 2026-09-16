@@ -9,9 +9,9 @@ build/
 # macOS
 .DS_Store
 
-# TimeCop runtime logs (append-only diary; regenerates on use)
-reel/receipt.jsonl
-reel/receipt-archive.jsonl
+# Second Thought runtime logs (append-only diary; regenerates on use)
+drill/receipt.jsonl
+drill/receipt-archive.jsonl
 
 # Foreign project cache sharing this folder — not ours, never commit
 .next/
