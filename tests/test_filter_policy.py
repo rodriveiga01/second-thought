@@ -75,7 +75,8 @@ class Redact(unittest.TestCase):
         self.assertIn("eval", normalize("e\\x76al x"))
 
     def test_private_key_body_is_redacted(self):
-        out = redact("-----BEGIN PRIVATE KEY-----\\nsecret-material\\n-----END PRIVATE KEY-----")
+        pem = "-----BEGIN PRIVATE KEY-----" + chr(10) + "secret-material" + chr(10) + "-----END PRIVATE KEY-----"
+        out = redact(pem)
         self.assertIn("[REDACTED-PRIVATE-KEY]", out)
         self.assertNotIn("secret-material", out)
 
