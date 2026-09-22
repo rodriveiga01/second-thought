@@ -26,7 +26,8 @@ SECRET_PATTERNS = [
     (re.compile(r"AKIA[0-9A-Z]{16}"), "[REDACTED-AWS-KEY]"),
     (re.compile(r"gh[pousr]_[A-Za-z0-9_]{10,}"), "[REDACTED-GITHUB-TOKEN]"),
     (re.compile(r"xox[bap]-[A-Za-z0-9-]+"), "[REDACTED-SLACK-TOKEN]"),
-    (re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"), "[REDACTED-PRIVATE-KEY]"),
+    # Redact the whole PEM block; hiding only its header still leaks the key body.
+    (re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----.*?-----END [A-Z ]*PRIVATE KEY-----", re.S), "[REDACTED-PRIVATE-KEY]"),
     (re.compile(r"(?i)(password|passwd|secret|api[_-]?key|token)\s*[:=]\s*\S+"),
      r"\1=[REDACTED]"),
     (re.compile(r"export\s+\w*(SECRET|PASSWORD|TOKEN|KEY)\w*=\S+"),
@@ -95,13 +96,15 @@ def build_state(cmd: str, cwd: str = "", repo: str = "", branch: str = "",
                 ssh_host: str = "", last_cmds: "list[str] | None" = None,
                 script_head: str = "") -> str:
     """Tiny structured note for Jev. Keep ~300-500 tokens."""
-    lines = (script_head or "").splitlines()[:40]
-    hist = (last_cmds or [])[-3:]
+    # Context is sent to the live judge too, so redact metadata and history as
+    # carefully as the command itself.
+    lines = redact(script_head or "").splitlines()[:40]
+    hist = [redact(line) for line in (last_cmds or [])[-3:]]
     parts = [
         f"command: {(cmd or '')[:1000]}",
-        f"cwd: {cwd or '(unknown)'}",
-        f"repo: {repo or '(unknown)'} branch: {branch or '(unknown)'}",
-        f"ssh_host: {ssh_host or '(local)'}",
+        f"cwd: {redact(cwd) or '(unknown)'}",
+        f"repo: {redact(repo) or '(unknown)'} branch: {redact(branch) or '(unknown)'}",
+        f"ssh_host: {redact(ssh_host) or '(local)'}",
         f"recent: {' | '.join(hist) if hist else '(none)'}",
     ]
     if lines:

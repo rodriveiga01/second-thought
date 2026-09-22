@@ -74,6 +74,17 @@ class Redact(unittest.TestCase):
         self.assertIn("rm -rf /", normalize("rm${IFS}-rf${IFS}/"))
         self.assertIn("eval", normalize("e\\x76al x"))
 
+    def test_private_key_body_is_redacted(self):
+        out = redact("-----BEGIN PRIVATE KEY-----\\nsecret-material\\n-----END PRIVATE KEY-----")
+        self.assertIn("[REDACTED-PRIVATE-KEY]", out)
+        self.assertNotIn("secret-material", out)
+
+    def test_live_context_redacts_metadata_history_and_script(self):
+        from second_thought.filter import build_state
+        out = build_state("ls", cwd="/tmp/token=secret", last_cmds=["export API_KEY=secret"],
+                          script_head="PASSWORD=secret")
+        self.assertNotIn("secret", out)
+
 
 class PolicyGates(unittest.TestCase):
     def test_block_needs_all_three(self):
